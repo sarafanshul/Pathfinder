@@ -1,4 +1,5 @@
 try:
+	from multiprocessing import Pool
 	import pygame
 	import sys
 	import math
@@ -7,7 +8,7 @@ try:
 	from tkinter import messagebox
 	import os
 except:
-	print('NOT ENOUGH RESOURCES :(')
+	print('NOT ENOUGH RESOURCES ,\n Read requirements.txt')
 
 
 # ----------__init__ MAIN ----------
@@ -30,6 +31,7 @@ closedSet = []
 w = width//row
 h = height//cols
 cameFrom = []
+multi_process_pool = Pool() #implementation/Runtime Errors Occurring
 
 # initialize 
 screen = pygame.display.set_mode((width, height)) # 600 ,600
@@ -196,7 +198,11 @@ def main():
 			end.show(starting_point_col, 0)
 
 			Tk().wm_withdraw()
-			result = messagebox.askokcancel('Program Finished', ('The program finished, the shortest distance \n to the path is ' + str(temp) + ' blocks away, \n would you like to re run the program?'))
+			result = messagebox.askokcancel('Program Finished', \
+(f'The program finished, the shortest distance \n\
+to the path is {int(temp)} blocks away, \
+\n Would you like to re run the program?')
+				)
 			if result == True: # restart the program using exce function
 				# The exec functions of Unix-like operating 
 				# 	systems are a collection of functions that
@@ -206,13 +212,6 @@ def main():
 			else:
 				pygame.quit()
 				exit()
-				# ag = True
-				# while ag:
-				# 	ev = pygame.event.get()
-				# 	for event in ev:
-				# 		if event.type == pygame.KEYDOWN:
-				# 			ag = False
-				# 			break
 			pygame.quit()
 
 		openSet.pop(lowestIndex)
@@ -250,4 +249,9 @@ while True:
 	if ev.type == pygame.QUIT:
 		pygame.quit()
 	pygame.display.update()
-	main()
+	try: 
+		main()
+	except: 
+		print('Computational Error Occured') 
+
+exit()
