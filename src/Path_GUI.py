@@ -1,17 +1,22 @@
 try:
 	from multiprocessing import Pool
-	import pygame
+	# import pygame
 	import sys
 	import math
 	from tkinter import *
 	from tkinter import ttk
 	from tkinter import messagebox
 	import os
+	import contextlib # for removing default text {it redirects Output to None}
+	with contextlib.redirect_stdout(None):
+		import pygame
+
 except:
 	print('NOT ENOUGH RESOURCES ,\n Read requirements.txt')
 
 
 # ----------__init__ MAIN ----------
+
 width = 500
 height = 500
 cols = 50
@@ -31,10 +36,16 @@ closedSet = []
 w = width//row
 h = height//cols
 cameFrom = []
-multi_process_pool = Pool() #implementation/Runtime Errors Occurring
+# multi_process_pool = Pool() #implementation/Runtime Errors Occurring
 
-# initialize 
-screen = pygame.display.set_mode((width, height)) # 600 ,600
+
+# initialize window
+
+# screen = pygame.display.set_mode((width, height) , pygame.NOFRAME) # for no title bar
+screen = pygame.display.set_mode((width, height)) # load screen
+icon = pygame.image.load('static/download.png') # load image
+pygame.display.set_caption('Pathfinder') # custom title bar
+pygame.display.set_icon(icon) # custom title bar icon
 
 class spot:
 	def __init__(self, x, y):
@@ -103,9 +114,9 @@ for i in range(0,row):
 def onsubmit():
 	global start
 	global end
+
 	st = startBox.get().split(',')
 	ed = endBox.get().split(',')
-
 	start = grid[int(st[0])%cols][int(st[1])%row] # % for inlength data intake
 	end = grid[int(ed[0])%cols][int(ed[1])%row]
 	
@@ -113,6 +124,8 @@ def onsubmit():
 	window.destroy()
 
 window = Tk()
+# window.fill(grey)
+# window.configure(background='black')
 label = Label(window, text='Start(x,y): ')
 startBox = Entry(window)
 label1 = Label(window, text='End(x,y): ')
@@ -188,7 +201,7 @@ def main():
 
 		current = openSet[lowestIndex]
 		if current == end:
-			print('done', current.f)
+			print(f'shortest route ->{int(current.f)} blocks away')
 			start.show(starting_point_col,0)
 			temp = current.f
 			for i in range(round(current.f)):
@@ -252,6 +265,7 @@ while True:
 	try: 
 		main()
 	except: 
-		print('Computational Error Occured') 
+		print('Computational Error Occured')
+		break
 
 exit()
